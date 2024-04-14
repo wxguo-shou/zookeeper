@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * 过程复杂，缺点多，基本不用，用程数框架代替
+ */
 public class DistributedLock {
 
     private final String connectString = "hadoop102:2181,hadoop103:2181,hadoop104:2181";
@@ -61,7 +64,6 @@ public class DistributedLock {
 
             // 如果children只有一个值，直接获取。 如果有多个节点，需要判断，谁最小
             if (children.size() == 1){
-                return;
             }else {
                 Collections.sort(children);
 
@@ -75,7 +77,6 @@ public class DistributedLock {
                     System.out.println("数据异常");
                 }else if (index == 0){
                     // 就一个节点， 可以获取锁了
-                    return;
                 }else {
                     // 需要监听， 前一个节点的变化
                     withPath = "/locks/" + children.get(index - 1);
@@ -83,7 +84,6 @@ public class DistributedLock {
 
                     // 等待监听
                     waitLatch.await();
-                    return;
                 }
             }
 
